@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qual é a senha?</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="boxbox">
+        <h1>Qual é a senha?</h1>
+        <input type="text" id="senha">
+        <button onclick="verificarSenha()">Enviar</button>
+    </div>
+
+    <script>
+        function verificarSenha() {
+            var senha = document.getElementById('senha').value;
+            var senhaCorreta = "Amor é Arte";  // Substitua por sua senha real
+
+            if (senha === senhaCorreta) {
+                window.location.href = "fase1.html";  // Substitua pelo link da outra página
+            } else {
+                alert("Senha incorreta. Tente novamente.");
+            }
+        }
+    </script>
+</body>
+</html>
