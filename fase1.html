@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fase 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="boxbox">
+        <h1>1</h1>
+        <h1>Onde estou?</h1>
+        <p><i>Não sou pintura, mas a arte de cortar,
+            Minha figura angular foi feita para impactar.
+            Com ferro e metal, a modernidade celebrei,
+            Na França sou símbolo, foi ali que fiquei.</i></p>
+        <div id="map"></div>
+        <button class="btn" id="nextPageBtn" disabled>Verificar</button>
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDtNFVTy_ZSRe5zFXgLsQboNIfRdD_Qu8&callback=initMap&libraries=places&v=weekly" async></script>
+    <script>
+        let map, marker, geocoder;
+        // Endereço correto: Neue Pinakothek
+        const correctAddress = "Torre Eiffel"; // Endereço da Neue Pinakothek
+        const nextPageButton = document.getElementById('nextPageBtn');
+        let correctLocation;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -23.52014419529313, lng: -46.68416338201205 },  // Localização inicial
+                zoom: 15,
+            });
+
+            // Geocodificador do Google Maps para buscar as coordenadas do endereço correto
+            geocoder = new google.maps.Geocoder();
+
+            // Coloca o marcador inicialmente na Rua Isaac Krasichic, 80
+            marker = new google.maps.Marker({
+                map: map,
+                position: map.getCenter(),
+                draggable: true, // Permite que o usuário arraste o marcador
+            });
+
+            // Adiciona o evento para o marcador ser movido
+            marker.addListener('dragend', function() {
+                validateLocation(marker.getPosition());
+            });
+
+            // Adiciona o evento de click no mapa, caso o usuário queira mover o marcador
+            map.addListener('click', function(event) {
+                marker.setPosition(event.latLng);  // Move o marcador para a posição onde o usuário clicou
+                validateLocation(marker.getPosition());  // Valida a nova posição
+            });
+
+            // Geocodifica o endereço correto para obter a localização
+            geocodeAddress(correctAddress);
+        }
+
+        // Função para geocodificar o endereço correto
+        function geocodeAddress(address) {
+            geocoder.geocode({ 'address': address }, function(results, status) {
+                if (status === 'OK') {
+                    // A localização do endereço correto
+                    correctLocation = results[0].geometry.location;
+                    console.log("Localização correta:", correctLocation);
+                } else {
+                    alert("Geocodificação falhou: " + status);
+                }
+            });
+        }
+
+        // Função para validar se o marcador está no endereço correto
+        function validateLocation(location) {
+            // Considerando uma margem de erro de 0.001 para as coordenadas
+            const isCorrect = Math.abs(location.lat() - correctLocation.lat()) < 0.001 && Math.abs(location.lng() - correctLocation.lng()) < 0.001;
+            
+            if (isCorrect) {
+                nextPageButton.disabled = false;
+                nextPageButton.onclick = function() {
+                    window.location.href = "fase2.html"; // Redireciona para a próxima página
+                    alert("Parabéns! Você passou da primeira fase! Essa foi facíl para ir pegando o jeito. No final você vai descobrir a senha para abrir o cofre")
+                };
+            } else {
+                nextPageButton.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
